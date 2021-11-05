@@ -1,0 +1,45 @@
+*   AutobahnRestPoints
+
+    고속도록 휴게소 날씨 중계 어플리케이션
+
+    Splash
+    1. RestPointDatabase에 item이 있는지 없는지 검사
+    1-1. 정보 없으면 DB저장
+    1-2. 정보 있으면 Maps로 넘어감.
+    Maps
+    1. 도로명 입력
+    2. 년,월,일,시 스피너 선택
+    3. 해당 정보 이용해서 http 연결
+    4. 읽어온 정보 중에서 클릭한 친구들은 RestPointDatabase에 저장.
+
+    @ Response 항목
+    // sdate : String          -> 날짜*
+    // stdHour : String        -> 시간*
+    unitCode : String       -> 휴게소 코드
+    unitName : String       -> 휴게소명*
+    addr : String           -> 주소*
+    addrName : String       -> 기상실황지역명*
+    rountName : String      -> 도로명*
+    tempValue : String      -> 현재 기온값*
+    highestTemp : String    -> 최고온도*
+    lowestTemp : String     -> 최저온도*
+    weatherContents : String-> 현재기상상태 *
+    rainfallValue : String  -> 일 강수값*
+    snowValue : String      -> 적설량 값*
+    windValue : String      -> 풍속값*
+
+    key : 5986964392
+    item : 7개
+    1 : unitName
+    2 : addr
+    3 : 아래화살표 + lowestTemp <- tempValue -> highestTemp + 위화살표
+    4 : rainfallValue / snowValue / windValue
+
+    weatherContents
+    - 맑음
+    - 구름많음
+    - 흐림
+    - 박무
+    - 약한비계속
+    - 약한눈단속
+
