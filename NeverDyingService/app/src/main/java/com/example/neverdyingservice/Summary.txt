@@ -1,0 +1,26 @@
+*   Never Dying Service
+
+    1. 앱이 비정상적으로 종료되어 Service가 죽을 때
+
+        서비스의 onDestroy()에서 AlarmManager의 PendingIntent를 통해 broadcast
+        (백그라운드에서 startService() 호출이 가능한 상황)
+
+    2. AlarmReceiver의 onReceive에서 위의 pendingIntent를 받아
+       startForgroundService(RestartService) 호출
+
+        (백그라운드에서도 startForgroundService() 호출로 서비스 시작 가능.)
+
+    3. RestartService에서 반드시 5s 이내에 startForeGround()를 호출
+
+        임시 notification을 만ㄷ르어 startForeground() 호출
+        바로 startService(AlarmService)를 호출하여 살리려는 서비스 호출
+        stopForeground()를 호출해 임시로 만든 notification이 나타나지 않도록 함.
+        notification은 단지 '5초 이내 StartForeGround() 호출' 룰을 지키기 위한 임시방편
+
+
+
+    onDestroy()에서 AlarmManager로 PendingIntent broadcast
+    ->
+    AlarManager에서 PendingIntent를 이용해서 startForeground(RestartService)호출
+    ->
+    RestartService에서 5초 이내 startForeground() 호출
