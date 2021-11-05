@@ -1,0 +1,166 @@
+* Kotlin Coroutine 코루틴
+
+    - 비동기적으로 실행되는 코드를 간소화하기 위해 Android에서 사용할 수 있는 동시 실행 설계 패턴.
+    - 기본 Thread를 차단하여 앱이 응답하지 않게 만들 수도 있는 장기 실행 작업을 관리하는데 도움이 됨.
+    - Process를 Thread로 나누어 병렬 작업하는 것처럼 코루틴도 Thread를 나누어 병렬 처리를 하는 것.
+
+    @ 주목 기능
+    - 경량    : 코루틴을 실행 중인 스레드를 차단하지 않는 '정지'를 지원하므로 단일 스레드에서 많은 코루틴을 실행할 수 있다.
+    - 메모리 누수 감소 : 구조화된 동시 실행을 사용하여 범위 내에서 작업 실행 (CoroutineScope 내에서만 코루틴이 생존)
+    - 기본으로 제공되는 취소 지원 : 실행 중인 코루틴 계층 구조를 통해 자동으로 '취소'가 전달.
+    - Jetpack 통합 : jetpack 라이브러리 중 코루틴 지원 확장 프로그램이 많이 있음.
+
+    @ 종속 항목 정보
+    - Android 프로젝트에서 코루틴을 사용하려면 build.gradle 파일에 다음의 종속 항목을 추가
+    dependencies {
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+    }
+
+    @ 백그라운드 스레드에서 실행
+    - 기본 thread에서 네트워크 요청을 보내면 응답을 받을 때까지 thread는 '대기' / '차단' 됨.
+    - thread가 차단되면 OS는 onDraw()를 호출할 수 없으므로 앱이 정지됨.
+    - 이를 해결하는 데 코루틴을 사용할 수 있음.
+
+---------------------------------------------------------------------------------------------------------
+    sealed class Result<out R> {
+        data class Success<out T>(val data : T) : Result<T>()
+        data class Error<val exception: Exception) : Result<Nothing>()
+    }
+    class LoginRepository(private val responseParser: LoginResponseParser) {
+        private const val loginUrl = "https://example.com/login"
+
+        // 네트워크 요청을 생성하는 함수는 현재 thread를 차단함.
+        // makeLoginRequest가 동기식이며 호출 thread를 차단.
+        fun makeLoginRequest (jsonBody: String): Result<LoginResponse> {
+            val url = URL(loginUrl)
+            (url.openConnection() as? HttpURLConnection)?.run {
+                requestMethod = "POST"
+                setRequestProperty("Content-Type", "application/json; utf-8")
+                setRequestProperty("Accept", application/json")
+                doOutput = true
+                outputStraem.write(jsonBody.toByteArray())
+                return Result.Success(responseParser.parse(inputStream))
+            }
+            return Result.Error(Exception("Cannot open HttpURLConnection"))
+        }
+        // 암튼 이런 함수가 있어서 네트워크 요청 ~ 응답까지 시간이 걸리고 그 시간 동안에 요청 스레드는 차단되니까
+        // 그걸 막기위해서 코루틴을 쓰자.
+    }
+    // 코루틴 안 쓴 거
+    // 이렇게 makeLoginRequest를 사용하면 동기식.
+    // 호출 스레드 (UI 스레드)를 차단함.
+    class LoginViewModel(private val loginRepository: LoginRepository) : VieModel() {
+        fun login(username : String, token: String) {
+            val jsonBody = "{ username: \ "$username\", token: \"$token\"}""
+            loginRepository.makeLoginRequest(jsonBody)
+        }
+    }
+
+    // 코루틴 쓴 거
+    // 이렇게 makeLoginRequest를 사용하면 비동기식
+    // 호출 스레드를 차단하지 않고, background에서 응답까지 기다리게 됨.
+    class LoginViewModel (private val loginRepository: LoginRepository) : ViewModel() {
+        fun login(username: String, token: String) {
+            //  Ui thread 실행을 이어갈 새로운 코루틴 생성
+            viewModelScope.launch(Dispatchers.IO) {
+                val jsonBody = "{ username: \"$username\", token: \"$token\"}"
+                loginRepository.makeLoginRequest(jsonBody)
+            }
+        }
+    }
+    /*  login 함수 코루틴 코드 분석
+
+        viewModelScope
+        - ViewModel ktx 확장 프로그램에 포함된 사전정의 CoroutineScope.
+        - 모든 코루틴은 범위 내에서 실행해야 함.
+        - CoroutineScope는 하나 이상의 코루틴 관리.
+
+        launch
+        - 코루틴을 만들고 함수 본문의 수행을 디스패처에 전달하는 함수
+
+        Dispatchers.IO
+        - 코루틴을 I/O 작업용으로 예약된 스레드에서 실행해야 함을 나타냄.
+
+        정리  -> 함수가 동기형이기에 오래 걸리거나 스레드 차단의 우려가 있을 경우, 해당 함수를 코루틴 스코프에 넣으면
+                입출력 스레드(Dispatchers.IO ; 백그라운드)에서 수행되므로 안정성을 확보할 수 있다.
+
+    */
+---------------------------------------------------------------------------------------------------------
+    /*
+        위의 예에서는 makeLoginRequest를 호출하는 모든 항목이 실행을 명시적으로 기본 thread 외부로 이동해야 한다는 것이 문제.
+        이하로는 이를 해결하기 위한 예제.
+    */
+
+    @ 기본 안전을 위해 코루틴 사용
+    /*
+        기본 안전 함수 : 기본 스레드에서 UI 업데이트를 차단하지 않는 함수
+
+        makeLoginRequest 는 호출될 때 ui가 차단되므로 기본 안전 함수가 아님.
+        코루틴 라이브러리의 withContext() 함수를 사용하여 코루틴 실행을 다른 스레드로 이동하면 된다.
+
+        withContext(Dispatchers.IO)는 코루틴 실행을 I/O 스레드로 이동시킴.
+        makeLoginRequest를 기본 안전 함수로 만듬. 필요에 따라 UI도 업데이트 되도록 함.
+
+        suspend : 코루틴 내에서 함수가 호출되도록 강제하는 코틀린 키워드.
+        - 모든 suspend 함수는 코루틴에서 실행되어야 함.
+    /
+    class LoginRepository(...) {
+        ...
+        suspend fun makeLoginRequest(jsonBody: String) : Result<LoginResponse> {
+            // I/O 디스패처로 코루틴 실행을 이동.
+            return withContext(Dispatchers.IO) {
+                // 네트워크 요청 코드를 차단.
+            }
+        }
+    }
+
+    class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+        fun login(username: String, token: String) {
+            // ui 스레드에 새 코루틴을 생성
+            viewModelScope.launch {
+                val jsonBody = ...
+
+                // 네트워크 요청과 강제 실행(suspend execution)을 생성
+                val result = loginRepository.makeLoginRequest(jsonBody)
+
+                // 사용자에게 네트워크 요청 결과를 보여줌.
+                when (result) {
+                    is Result.Succes<LoginResponse> -> // Happy path
+                    else -> // ui에 에러 보고
+                }
+            }
+        }
+    }
+    /*
+        두 번째 login 함수와 세 번째 login 함수의 차이점
+
+        - launch가 Dispatchers.IO 매개변수를 사용하지 않음.
+        - Dispatcher를 launch에 전달하지 않으면 viewModelScope에서 실행된 코루틴은 기본 스레드에서 실행.
+        - 네트워크 요청 결과를 성공/실패에 따라 ui에 표시됨.
+
+        - 앱이 기본 스레드의 view 레이어에서 login() 함수 호출
+        - launch가 기본 스레드에서 네트워크 요청을 보낼 새 코루틴을 생성. 코루틴이 네트워크 요청 실행
+        - 코루틴 내에서 loginRepository.makeLoginRequest() 호출은 makeLoginRequest()의 withContext블록
+          실행이 끝날 때까지 코루틴의 추가 실행을 정지함.
+        - withContext() 블록이 완료되면 login() 의 코루틴이 네트워크 요청 결과와 함께 기본 스레드에서 실행 재개
+    */
+
+    @ 예외처리
+    - try-Catch 블록 사용
+    // makeLoginRequest() 호출에 의한 예기치 않은 상황 발생시 예외가 ui에서 오류로 처리됨.
+    class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+        fun makeLoginRequest(username : String, token: String) {
+            viewModelScope.launch {
+                val jsonBody = ...
+                val result = try {
+                    loginRepository.makeLoginRequest(jsonBody)
+                } catch(e: Exception) {
+                    Result.Error(Exception("Network request failed"))
+                }
+                when (result) {
+                    is Result.Success<LoginResponse> -> // Happy path
+                    else -> // Show error in ui
+                }
+            }
+        }
+    }

@@ -1,0 +1,134 @@
+* RESTful API
+
+    @ 무엇인고
+
+    - REST 아키텍처의 제약 조건을 준수하는 어플리케이션 프로그래밍 인터페이스.
+    - Representational State Transfer의 줄임말.
+
+    @ API 란,
+
+    - 어플리케이션 SW를 구축하고 통합하는 정의 및 프로토콜 세트
+    - 정보 제공자와 정보 사용자 간의 계약.
+    - 소비자에게 필요한 콘텐츠(호출)와 생산자에게 필요한 콘텐츠(응답)을 구성.
+    - 쉽게 말해, 컴퓨터나 시스템과 상호작용하여 정보를 검색하거나 기능 수행을 하고자 할 때 API는 사용자가 원하는 것을
+      시스템에 전달할 수 있게 지원하여 시스템이 해당 요청을 이해하고 이행할 수 있도록 한다.
+
+      @ REST 구성
+
+      - 자원(RESOURCE)        : URI
+      - 행위(VERB)            : HTTP METHOD
+      - 표현(REPRESENTATION)
+
+      @ REST 특징
+
+      - Uniform (유니폼: 통합 인터페이스)
+      URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍처 스타일
+
+      - stateless (무상태성)
+      작업을 위한 상태정보를 따로 저장, 관리하지 않음.
+      세션 정보, 쿠키 모두 없으므로 api 서버는 단순히 들어오는 요청을 처리하기만 하면 됨.
+      이로써 서비스 자유도가 높아지고 서버에서 불필요한 정보를 관리하지 않음으로써 구현이 단순화.
+
+      - Cacheable (캐시 가능)
+      REST는 HTTP라는 기존 웹표준을 그대로 사용하기 때문에, 웹에서 사용하는 기존 인프라를 사용할 수 있음.
+      따라서 HTTP의 캐싱기능을 사용할 수 있음.
+      HTTP 프로토콜 표준에서 사용하는 Last-Modified태그나 E-Tag를 사용하면 캐싱 구현 가능.
+
+      - Self-descriptiveness (자체 표현 구조)
+      REST API 메시지만 보고도 쉽게 이해 가능한 자체 표현구조로 구성됨.
+
+      - Client-Server 구조
+      REST 서버는 API제공, Client는 사용자 인증, 컨텍스트(세션, 로그인 정보)를 직접 관리하는 구조로 역할이 구분.
+
+      - 계층형 구조
+      REST 서버는 다충 계층으로 구성될 수 있음.
+      보안, Load Balancing, 암호화 계층 추가로 구조 상 유연성 확보
+      PROXY, GATEWAY 와 같은 네트워크 기반의 중간매체 사용 가능.
+
+
+      @ REST API 디자인 가이드
+
+      1. URI는 정보의 자원을 표현해야 한다.
+      2. 자원에 대한 행위는 HTTP METHOD(GET, POST, PUT, DELETE)로 표현한다.
+
+
+      @ REST API 중심 규칙
+
+      1. URI는 정보의 자원을 표현해야 한다. (리소스명은 동사보다 명사를 사용)
+      GET /members/delete/1
+      // 이 방식은 REST를 제대로 적용하지 않은 URI.
+      // URI는 자원을 표현해야하는 데 중점을 두어야 하나, DELETE와 같은 행위가 포함되어 있기 때문.
+
+      2. 자원에 대한 행위는 HTTP Method(GET, POST, PUT, DELETE)로 표현
+      DELETE /members/1
+      // 위의 잘못된 URI 를 HTTP Method를 통해 수정.
+
+      // 회원정보를 가져오는 URI
+      GET /members/show/1   --- x
+      GET /members/1        --- o
+
+      // 회원을 추가할 때
+      GET /members/insert/2 --- x
+      PUT /members/2        --- o
+
+
+          # [참고] HTTP METHOD의 알맞은 역할
+
+          POST  : 리소스 생성
+          GET   : 리소스 조회
+          PUT   : 리소스 수정
+          DELETE: 리소스 삭제
+
+
+          # [참고] URI 설계 시 주의점
+
+          1. '/'는 계층관계를 나타내는 데 사용
+          http://restapi.example.com/houses/apartments
+          http://restapi.example.com/animals/mammals/whales
+
+          2. URI 마지막 문자로 '/'를 포함하지 않는다.
+          http://restapi.example.com/houses/apartments/ --- x
+          http://restapi.example.com/houses/apartments  --- o
+
+          3. '-'은 URI 가독성을 높이는데 사용
+
+          4. '_'는 URI에 사용 X
+
+          5. URI 경로에는 소문자가 적합.
+
+          6. 파일 확장자는 URI에 포함 X
+          http://restapi.example.com/members/soccer/345/photo.jpg   --- x
+
+
+          # [참고] 리소스 간 관계 표현법
+
+          - REST 리소스 간 연관 관계가 있는 경우
+          /리소명/리소스ID/관계가 있는 다른 리소스명
+          GET : /users/{userid}/devices --- 일반적으로 소유 'has'의 관계를 표현할 때
+          - 관계명이 복잡할 경우, 이를 서브 리소스에 명시적으로 표현.
+
+
+          # [참고] 자원을 표현하는 Collection과 Document
+
+          - Collection  : 문서의 집합, 객체의 집합 (복수로 표현)
+          - Document    : 문서 , 객체 (단수로 표현)
+          - Collection과 Document 모두 리소스.
+          - URI에 표현됨.
+          http://restapi.example.com/sports/soccer              --- Collection : sports / Document : soccer
+          http://restapi.example.com/sports/soccer/players/13   --- Collection : sports,players / Document : soccer, 13
+
+
+      @ HTTP 응답 상태 코드
+
+      - 정확한 응답의 상태코드 만으로 많은 정보를 전달할 수 있다.
+
+      200   : 클라이언트 요청을 정상적으로 수행
+      201   : 클라이언트가 어떠한 리소스 생성을 요청 (POST를 통한 리소스 생성 작업 시 )
+
+      400   : 클라이언트 요청이 부적절
+      401   : 클라이언트가 인증되지 않은 상태에서 보호된 리소스를 요청 (로그인X 유저 + 요청가능 리소스)
+      403   : 클라이언트의 유저 인증과는 별개로 응답을 원치 않는 리소스를 요청했을 경우 (403보다는 400,404를 활용할 것. 403은 리소스가 존재함을 암시하므로)
+      404   : 클라이언트가 요청한 리소스에 사용 불가능한 Method를 이용했을 경우
+
+      301   : 클라이언트가 요청한 리소스 URI가 변경되었을 때 (응답 시 Location header에 변경된 URI 포함)
+      500   : 서버에 문제가 있을 경우 사용하는 응답코드
