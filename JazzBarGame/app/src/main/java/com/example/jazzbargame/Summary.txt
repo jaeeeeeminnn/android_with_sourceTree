@@ -1,0 +1,9 @@
+*   Jazz Bar Game
+
+    1. (아이디, 사진, 이름, 성별, 소지금)의 정보를 가지고 있는 Customer를 DB에 많이 만들어 둠.
+    2. list에 한 명만 남게 되면 나머지 4명을 DB에서 불러옴.
+    3. list에 Customer 하나를 클릭하면,
+        3-1. list에서 Customer가 삭제
+        3-2. 해당 Customer의 money가 progress bar에 반영
+        3-3. list에 하나 남았는지 여부에 따라 DB reading
+        3-4. imageButton을 클릭하면 해당 이미지가 Customer의 imgProfile로 변경
