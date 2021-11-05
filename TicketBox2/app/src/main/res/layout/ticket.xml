@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ticket.xml
+
+    recycler view에 표현되는 한 항목에 관한 view
+    삼중 Linear Layout 으로 구성.
+    _______________xml 구성__________________
+    첫 linear layout {
+        image View (movie_cover: Drawable?)
+        둘 linear layout {
+            text view (movie_name: String)
+            셋 linear layout {
+                text view (director: String)
+                text view (price: Int)
+                text view (genre: String)
+            }
+        }
+    }
+    _________________________________________
+
+    두 번째 linear 크기 조정 == 세 번째 linear 크기 조정
+    세 번째 linear 크기를 조정하면 두 번째가 나머지를 채워줌. (height = match_parent)
+
+    ! 주석 처리된 부분은 constraint layout으로 구성할 당시 제약조건 선언
+    ! linear layout으로 구성할 때는 필요없어서 뺐음.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/movie_cover"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"/>
+    <!--
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/movie_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="영화 제목"
+            android:textSize="25sp" />
+        <!--
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/movie_cover"
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Director"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="감독"
+                android:textSize="15sp" />
+            <!--
+                app:layout_constraintStart_toEndOf="@id/price"
+                app:layout_constraintTop_toBottomOf="@id/movie_name"
+            -->
+
+            <!--
+                app:layout_constraintStart_toEndOf="@id/movie_cover"
+                app:layout_constraintTop_toBottomOf="@id/movie_name"
+            -->
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="티켓 가격"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="장르"
+                android:textSize="15sp" />
+            <!--
+                app:layout_constraintStart_toEndOf="@id/Director"
+                app:layout_constraintTop_toBottomOf="@id/movie_name"
+            -->
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
