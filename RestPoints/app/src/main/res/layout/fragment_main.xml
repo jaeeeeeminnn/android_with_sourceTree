@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/level_4"
+    android:id="@+id/fragment_main"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/fragment_main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Usage Guide Line"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_contents"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
+
+    <TextView
+        android:id="@+id/fragment_main_contents"
+        android:text="
+            1. 화면 하단 좌측 달력 버튼을 클릭한다.\n
+            2. 검색하고자하는 날짜를 선택한다. \n
+            3. 화면 하단 좌측 체크 버튼을 클릭한다. \n
+            4. 현 화면 화면 중앙 버튼을 클릭한다. \n
+            5. 날씨를 알려준다.\n
+            뒤로가기 버튼으로 목적지, 날짜 재설정이 \n
+            가능하니 부담없이 선택하세요.
+        "
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

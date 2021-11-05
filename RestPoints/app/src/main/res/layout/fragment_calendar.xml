@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_calendar"
+    android:background="@color/level_4"
+    tools:context=".fragment.CalendarFragment">
+
+    <TextView
+        android:id="@+id/fragment_calendar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2. 날짜 선택"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/fragment_calendar_calendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CalendarView
+        android:id="@+id/fragment_calendar_calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/level_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/framgent_calendar_linear_date"
+        app:layout_constraintTop_toBottomOf="@id/fragment_calendar_title" />
+
+    <!--
+    <LinearLayout
+        android:id="@+id/fragment_calendar_linear_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/framgent_calendar_linear_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_calendar_calendarView">
+
+        <TextView
+            android:id="@+id/fragment_calendar_hour"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:background="@color/level_3"
+            android:gravity="center"
+            android:hint="선택한 날짜"
+            android:textColorHint="@color/white"
+            android:textSize="20sp" />
+
+        <SeekBar
+            android:id="@+id/fragment_calendar_seekbar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp" />
+    </LinearLayout>
+    -->
+
+    <LinearLayout
+        android:id="@+id/framgent_calendar_linear_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_calendar_calendarView">
+
+        <TextView
+            android:id="@+id/fragment_calendar_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/level_3"
+            android:gravity="center"
+            android:hint="선택한 날짜"
+            android:textColorHint="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/fragment_calendar_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="선택한 날짜가 표시될 것임."
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

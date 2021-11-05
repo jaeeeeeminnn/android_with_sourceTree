@@ -1,0 +1,47 @@
+*   RestPoints
+
+    전국 노선별 휴게소 날씨 정보 어플리케이션
+
+    # Activity
+    @Splash
+        죽지 않는 앱 Service 구현
+
+    @Main
+        Notification
+        Music Service
+        fragment transaction
+
+    @Maps
+        Show Map View
+
+    # Fragment
+    @ Calendar
+        Calendar(달력 : 20190101 ~ 20210601)에서 원하는 날짜 선택
+        DEFINES에 저장. Restpoint에서 날짜 사용할 수 있음
+
+    @ Destination
+        AutoCompleteTextView
+        Spinner
+        둘 중 하나의 값을 이용해서 도로명 검색
+        DEFINES에 저장. Restpoint에서 목적지 사용할 수 있음.
+
+    @ Favorite
+        DB
+        Restpoint에서 DB에 저장한 것을 꺼냄.
+        Delete All / Delete an Item / Select an Item 동작
+
+    @ Main
+
+    @ Restpoint
+        DB
+        Calendar, Destination에서 얻은 사용자 입력을 바탕으로 휴게소 검색
+        Http 연결. json 응답 받아서 Recycler list에 추가
+
+
+    Recycler view
+    Notification
+    Service
+    Coroutine
+    Thread
+    RoomDB
+    Immortal
