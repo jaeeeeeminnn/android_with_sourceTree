@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/fragment_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <SearchView
+            android:id="@+id/fragment_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="코스번호를 입력하세요"
+            android:background="@color/item_background_redOrange"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--
+        <LinearLayout
+            android:id="@+id/fragment_editText_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/item_background_redOrange"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/fragment_search">
+
+            <EditText
+                android:id="@+id/fragment_courseNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="코스 아이디를 입력하세요."
+                android:textColor="@color/grey"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/fragment_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:hint="시간이 조금 걸릴 수도 있습니다."
+                android:text="검색"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 텍스트 뷰 배경색 설정할 것. -->
+            <TextView
+                android:id="@+id/fragment_courseName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="코스명"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:background="@color/background_courseName"/>
+
+            <ProgressBar
+                android:id="@+id/framgent_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/framgent_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/fragment_background_orange" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
