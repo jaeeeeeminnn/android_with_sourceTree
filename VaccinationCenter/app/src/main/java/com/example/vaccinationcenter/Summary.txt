@@ -1,0 +1,18 @@
+*   VaccinationCenter
+
+    <UI>
+    spinner     : (시/도) 선택
+    editText    : (시/군/구) 선택
+    editText    : "탐색중" 을 progress와 연동해서 순차적으로 표시
+    progressbar : 부드럽게 움직일 수 있도록
+    recyclerview: 예방접종센터 목록 표현
+
+    <DB>
+    검색 결과로 나온 recycler view 중에서 클릭한 녀석들의 정보(address, facilityName)을 저장
+
+    <Logic>
+    Coroutine 대신 thread(Runnable)을 사용
+    입력에 따라 list 표현하는 것은 이전과 같되, list를 선택(onclick)하여 DB에 추가.
+    rest api를 이용하여 정보를 얻어옴.
+    progress bar를 부드럽게 진행시키는 속성을 써보고
+    progress bar의 값을 이용하여 바로 위의 textview의 text를 조절할 생각.
