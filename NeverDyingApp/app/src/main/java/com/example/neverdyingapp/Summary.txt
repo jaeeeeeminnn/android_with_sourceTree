@@ -1,0 +1,38 @@
+*   Never Dying App
+
+    안드로이드 life cycle을 이용해서 절대로 죽지 않는 앱을 만들기
+
+    ---------------------------------------
+
+    onCreate()
+
+    onStart()   <-  onRestart()
+
+    onResume()  <- onPause()
+
+    Activity Running
+
+    onPause()   ->  onResume()
+
+    onStop()    ->  onRestart()
+
+    onDestroy()
+
+    ---------------------------------------
+
+    다음의 life cycle을 이용함.
+
+    1. onPause에서 처리하는 방법
+        1-1. onPause에서 걸리면 onResume로 무조건 넘어가게 만든다.
+        1-2. 결과적으로 앱은 onStop, onDestroy를 거치지 않는다.
+
+    2. onStop에서 처리하는 방법
+        1-1. onStop에서 onRestart를 호출하여 onStart로 넘어간다.
+        1-2. onRestart라는 콜 백 함수가 있기 때문에 기대가 된다.
+
+    3. onDestroy에서 처리하는 방법
+        1-1. onDestroy를 통해 앱을 죽지 않게 다시 onCreate한다.
+        1-2. super 키워드 line을 제거하려고 한다.
+        -> onCreate(savedInstance : Bundle)에서 savedInstance가 뭔지 모르겠음.
+        -> 그래서 위 2개만 해봄.
+
