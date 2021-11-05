@@ -1,0 +1,105 @@
+*   Notification
+
+    - 사용 중이 아닌 앱의 이벤트에 관한 짧고 시기적절한 정보 제공하는 도구
+
+    @ 기본 알림 만들기
+
+    # 알림 콘텐츠 설정
+    - NotificationCompat.Builder 객체 : 알림을 시작하기 위한 객체.
+    - setSmallIcon()    : 작은 아이콘(필수)
+    - setContentTitle() : 제목
+    - setContentText()  : 본문 텍스트
+    - setPriority()     : 알림 우선순위
+    var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle(제목)
+            .setContentText(textContent)[.setStyle(NotificationCompat.BigTextStyle().bigText("long text")]
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+    # 채널만들기 및 중요도 설정
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSON_CODES.0) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // 시스템에 채널 등록
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                    as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    # 알림의 탭 작업 설정
+    - 알림은 탭에서 볼 수 있음.
+    - PendingIntent 객체를 이용
+    val intent = Intent(this, AlertDetails::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon()
+            ...
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+    # 알림 표시
+    with(NotificationManagerCompat.from(this)) {
+        // notificationId를 설정해야 알림 업데이트/삭제가 가능.
+        notify(notificationId, builder.build())
+    }
+
+    @ 작업 버튼 추가
+    - 최대 세 개의 작업 버튼 제공.
+    - 알림을 탭할 때의 작업과 중복되지 않아야 함.
+    - 작업을 추가하기 위해선 PendingIntent를 addAction() 메소드에 전달.
+    - 해당 작업을 수행해도 이미 열려있는 앱이 중단되지는 않는다.
+    val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
+        action = ACTION_SNOOZE
+        putExtra(EXTRA_NOTIFICATION_ID, 0)
+    }
+    val snoozePendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon()
+            ...
+            .setContentIntent(pendingIntent)
+            .addAction(R.drawable.ic_snooze, getString(R.string.snooze), snoozePendingIntent)
+
+    @ 바로 답장 작업 추가
+
+    # 답장 버튼 추가.
+    - RemoteInput.Builder 객체 이용.
+    - 사용자 입력을 받아들임.
+    private val KEY_TEXT_REPLY = "key_text_reply"
+    var replyLabel: String = resources.getString(R.string.reply_label)
+    var remoteInput: RemoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
+        setLabel(replyLabel)
+        build()
+    }
+
+    - 답장 작업의 PendingIntent 만듬.
+    var replyPendingIntent: PendingIntent = PendingIntent.getBroadcase(applicationContext,
+            conversation.getConversationId(),
+            getMessageReplyIntent(conversation.getConversationId()),
+            PendingIntent.FLAG_UPDATE_CURRENT)
+
+    - addRemoteInput()을 사용하여 REmoteInput 객체를 작업에 연결
+    var action: NotificationCompat.Action = NotificationCompat.Action.Builder(R.drawable.ic_reply_icon,
+            getString(R.string.label),
+            replyPendingIntent)
+            .addRemoteInput(remoteInput)
+            .build()
+
+    - 작업을 알림에 적용하고 알림 발행
+    val newMessageNotification = Notification.Builder(context, CHANNEL_ID)
+        .setSmallIcon()
+        ...
+        .addACtion(action)
+        .build()
+
+    with (NotificationManagerCompat.from(this)) {
+        notificationManager.notify(notificationId, newMessageNotification)
+    }
