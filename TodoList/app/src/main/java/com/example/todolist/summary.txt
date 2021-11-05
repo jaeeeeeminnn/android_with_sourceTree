@@ -1,0 +1,83 @@
+*   TodoList
+
+    할 일을 추가, 수정, 삭제할 수 있는 화면 두 개로 구성
+    listView    : 할 일 목록
+    Realm       : 데이터베이스
+
+    1. 레이아웃 작성
+        a. 동작 분석
+        b. Basic Activity 분석
+            - xml 파일은 다른 xml 파일을 include 속서으로 포함 가능.
+            - 복잡한 환경 구성에 유리하다.
+            - activity_main.xml
+                - 액션바 (AppbarLayout.toolbar)
+                - content_main.xml
+                - floating action button(fab)
+        c. 첫 번째 화면의 레이아웃 작성
+        d. 두 번재 액티비티 추가
+        e. 날짜 선택을 위한 CalendarView 배치
+        f. 할 일을 입력하는 EditText
+        g. 필요한 이미지 리소스 추가
+        h. 완료 버튼 추가
+        i. 삭제 버튼 추가
+        j. 추가 버튼 이미지 변경
+    2. Realm 데이터베이스
+        a. Realm 데이터베이스 사용 준비
+            - gradle(Project, Module) 파일 모두에 realm 의존성 추가
+        b. Realm 사용 방법
+        c. 할 일 데이터베이스 설계
+            - Dog 테이블을 클래스로 작성
+            - Dog.kt (예시)
+        d. Realm 테이블 작성
+            - Todo 테이블을 클래스로 작성
+            - Todo.kt (진짜)
+        e. Realm 초기화
+            - 앱이 실행될 때 제일 먼저 Realm을 초기화.
+            - 그러면 다른 액티비티가 사용할 수 있음.
+            - 앱을 실행 시 가장 먼저 수행되는 어플리케이션 객체를 상속하여
+            - realm을 초기화하면 된다.
+            - Application 클래스를 상속한 경우,
+            - 해당 클래스를 manifest 파일의 이름으로 설정하여
+            - 앱 전체 액티비티에서 공통 사용하는 객체를 초기화하는 데 사용한다.
+        f. 액티비티에서 Realm 인스턴스 객체 얻기
+            - Realm을 사용하기 위해 인스턴스화
+            - editActivity.kt
+        g. 날짜를 다루는 Calendar 클래스 사용 방법
+            - Calendar 클래스는 자바에서 제공하는 클래스
+            - 날짜를 다룰 때 사용.
+            - editActivity.kt
+        h. 할 일 추가, 수정, 삭제
+            - beginTransaction()으로  트랜잭션을 시작하고
+            - realm 객체를 Todo 클래스를 상속하도록 만들고
+            - commitTransaction()으로 트랜잭션을 종료
+            - being과 commit 사이의 모든 작업이 하나의 트랜잭션
+            - 데이터베이스에 추가, 삭제, 업데이트를 하려면 항상 트랜잭션을 시작하고 닫아야 함.
+        i. 추가 / 수정 분기 처리
+            - 추가모드 ( deleteFab 숨기기 / doneFab 클릭시 추가)
+            - 수정모드 ( deleteFab 삭제 / doneFab 클릭시 수정)
+    3. listView와 DB 연동
+        - Scroll View
+            - 적은 양의 아이템을 스크롤시킬 때 간단히 사용
+            - 한 번에 모든 아이템을 메모리에 로드
+        - List View
+            - 많은 양의 반복되는 아이템을 표시할 때 사용
+            - 뷰를 재사용하므로 적은 메모리 사용
+            - 화면에 보이는 것만 동적으로 로드
+            - 어댑터 필요 ( 데이터를 listview에 어떻게 표시할지 정의하는 객체)
+        a. 데이터 준비
+            - MainActivity.kt
+        b. 어뎁터 작성
+            - 일반적인 리스트 뷰용 어댑터는 BaseAdapter를 사용하지만,
+            - Realm을 사용할 때는 Realm에서 제공하는 RealmBaseAdapter 클래스를 상속.
+            - 모듈 수준 build.gradle에 라이브러리 의존성을 추가해야 함.
+            - TodoListAdapter.kt
+        c. 뷰 홀더 패턴 적용
+            - list view 에서 view holder 패턴을 사용하는 이유는 성능 향상 (메모리 관리) 때문
+            - view holder pattern은 한 번 작성한 레이아웃을 재사용하고 내용만 바꿈.
+            - view holder를 사용하면 총 10개의 아이템 중에 화면에 보이는 6개만 메모리에 로드
+            - 스크롤을 내렸을 때 새로 보이는 아이템은 이제 안 보이는 아이템의 레이아웃을 재사용하는 것.
+        d. 아이템 레이아웃 작성
+            - 아이템에 표시할 레이아웃 리소스 파일
+            - item_todo.xml
+        e. 할 일 목록 표시
+        f. 동작 확인
