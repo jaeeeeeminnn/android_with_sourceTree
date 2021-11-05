@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnServiceStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 시작"
+        app:layout_constraintBottom_toTopOf="@+id/btnServiceStop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.194"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.457" />
+
+    <Button
+        android:id="@+id/btnServiceStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 중지"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.194"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnServiceStart" />
+
+    <Button
+        android:id="@+id/btnServiceBinding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 바인딩"
+        app:layout_constraintBottom_toTopOf="@+id/btnServiceCall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnServiceStart"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnServiceCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 메소드 호출"
+        app:layout_constraintBottom_toTopOf="@+id/btnServiceUnBinding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnServiceStop"
+        app:layout_constraintTop_toBottomOf="@+id/btnServiceBinding" />
+
+    <Button
+        android:id="@+id/btnServiceUnBinding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 바인딩 해제"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnServiceStop"
+        app:layout_constraintTop_toBottomOf="@+id/btnServiceCall" />
+
+    <Switch
+        android:id="@+id/startedOrBinding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Started / Binding"
+        android:textOff="Started Service"
+        android:textOn="Binding Service"
+        android:textColor="#c2c2"
+        app:layout_constraintBottom_toTopOf="@+id/btnServiceBinding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
