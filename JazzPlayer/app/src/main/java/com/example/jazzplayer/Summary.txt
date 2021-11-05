@@ -1,0 +1,9 @@
+*   JazzPlayer
+
+    1. SplashActivity에서 imgbutton 클릭
+    2. 재즈 곡들이 Recycler view로 표현되어있는 MainActivity로 전환
+    3. list 중에서 원하는 곡을 클릭
+    4. 해당 곡 재생
+    5. 곡 재생 시 notification
+
+    @ DB 쓸까?
